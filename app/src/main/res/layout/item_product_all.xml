@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/item_product_all"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:columnCount="8"
+    android:orientation="horizontal">
+
+    <TextView
+        android:id="@+id/ip_name"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_row="0"
+        android:layout_rowSpan="2"
+        android:layout_column="0"
+        android:layout_columnWeight="1.5"
+        android:layout_gravity="fill"
+        android:ellipsize="end"
+        android:gravity="center"
+        android:maxLines="1"
+        android:textSize="15sp"
+        tools:text="Название" />
+
+    <TextView
+        android:id="@+id/ip_weight"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_row="0"
+        android:layout_rowSpan="2"
+        android:layout_column="1"
+        android:layout_columnWeight="1"
+        android:layout_gravity="fill"
+        android:ellipsize="end"
+        android:gravity="center"
+        android:maxWidth="0dp"
+        android:maxLines="1"
+        android:textSize="15sp"
+        tools:text="1234567" />
+
+    <TextView
+        android:id="@+id/ip_price"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_row="0"
+        android:layout_rowSpan="2"
+        android:layout_column="3"
+        android:layout_columnWeight="1"
+        android:layout_gravity="fill"
+        android:ellipsize="end"
+        android:gravity="center"
+        android:maxLines="1"
+        android:textSize="15sp"
+        tools:text="36845.50" />
+
+    <TextView
+        android:id="@+id/ip_res_unit"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_row="0"
+        android:layout_rowSpan="2"
+        android:layout_column="4"
+        android:layout_columnWeight="1"
+        android:layout_gravity="fill"
+        android:background="@color/colorOnPrimary"
+        android:ellipsize="end"
+        android:gravity="center"
+        android:maxLines="1"
+        android:textSize="15sp"
+        android:textStyle="normal|bold"
+        tools:text="159.3655" />
+
+    <TextView
+        android:id="@+id/ip_units"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_row="0"
+        android:layout_column="6"
+        android:layout_columnWeight="1.2"
+        android:layout_gravity="fill"
+        android:ellipsize="end"
+        android:gravity="center"
+        android:maxLines="1"
+        android:textSize="15sp"
+        android:textStyle="italic"
+        tools:text="100" />
+
+    <TextView
+        android:id="@+id/ip_measure"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_row="0"
+        android:layout_column="7"
+        android:layout_columnWeight="0.3"
+        android:layout_gravity="fill"
+        android:ellipsize="end"
+        android:gravity="center"
+        android:maxLines="1"
+        android:textSize="15sp"
+        android:textStyle="italic"
+        tools:text="ед." />
+
+    <TextView
+        android:id="@+id/ip_res_units"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_row="1"
+        android:layout_column="5"
+        android:layout_columnSpan="3"
+        android:layout_gravity="fill"
+        android:ellipsize="end"
+        android:gravity="center"
+        android:maxLines="1"
+        android:textSize="15sp"
+        android:textStyle="normal|bold"
+        tools:text="15936.55" />
+</GridLayout>

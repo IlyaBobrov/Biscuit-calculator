@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/options_menu_sort"
+        android:onClick="onClickOptionsMenu"
+        android:orderInCategory="10"
+        android:title="Сортировка"
+        android:visible="false"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/options_menu_settings"
+        android:onClick="onClickOptionsMenu"
+        android:orderInCategory="20"
+        android:title="Дополнительно"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/options_menu_clear"
+        android:onClick="onClickOptionsMenu"
+        android:orderInCategory="30"
+        android:title="Очистить список"
+        app:showAsAction="never" />
+
+</menu>

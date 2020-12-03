@@ -1,0 +1,22 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Theme.ProductCalc" parent="Theme.AppCompat.DayNight.DarkActionBar">
+
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimaryNight</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDarkNight</item>
+        <item name="colorAccent">@color/colorAccentNight</item>
+        <item name="android:textColorPrimary">@color/colorPrimaryLight</item>
+        <item name="android:textColorAlertDialogListItem">@color/colorPrimaryDarkNight</item>
+
+
+        <item name="android:statusBarColor" tools:targetApi="l">@color/colorPrimaryDarkNight</item>
+        <item name="android:navigationBarColor" tools:targetApi="l">@color/navigationBarColorNight</item>
+        <item name="android:colorPrimary" tools:targetApi="l">@color/colorPrimaryNight</item>
+
+    </style>
+    <style name="SplashTheme" parent="Theme.AppCompat.DayNight.DarkActionBar">
+        <item name="android:windowBackground">@drawable/splash_screen</item>
+    </style>
+
+</resources>

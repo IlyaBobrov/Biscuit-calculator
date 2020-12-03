@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:visibility="visible"
+    tools:context=".MainActivity">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@color/colorOnPrimary"
+        app:layout_constraintBottom_toBottomOf="@+id/grid_layout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/lay_margin"
+        android:textSize="@dimen/text_size"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="@string/headerCount" />
+
+    <GridLayout
+        android:id="@+id/grid_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/lay_margin"
+        android:layout_marginEnd="@dimen/lay_margin"
+        android:columnCount="6"
+        android:orientation="horizontal"
+        android:paddingBottom="@dimen/lay_margin"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/header">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_column="0"
+            android:layout_columnWeight="1.5"
+            android:layout_gravity="fill"
+            android:gravity="center"
+            android:text="Название"
+            android:textSize="@dimen/text_size"
+            android:textStyle="normal|bold" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_column="1"
+            android:layout_columnWeight="1"
+            android:layout_gravity="fill"
+            android:gravity="center"
+            android:maxWidth="0dp"
+            android:text="Вес"
+            android:textStyle="normal|bold" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_column="3"
+            android:layout_columnWeight="1"
+            android:layout_gravity="fill"
+            android:gravity="center"
+            android:text="Цена"
+            android:textSize="@dimen/text_size"
+            android:textStyle="normal|bold" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_column="4"
+            android:layout_columnWeight="1"
+            android:layout_gravity="fill"
+            android:gravity="center"
+            android:text="за 1 ед."
+            android:textSize="@dimen/text_size"
+            android:textStyle="normal|bold" />
+
+        <TextView
+            android:id="@+id/grid_custom"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_column="5"
+            android:layout_columnWeight="1.5"
+            android:layout_gravity="fill"
+            android:gravity="center"
+            android:text="custom"
+            android:textSize="@dimen/text_size"
+            android:textStyle="normal|bold" />
+    </GridLayout>
+
+    <ListView
+        android:id="@+id/grid_view"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginStart="@dimen/lay_margin"
+        android:layout_marginTop="@dimen/lay_margin"
+        android:layout_marginEnd="@dimen/lay_margin"
+        android:layout_marginBottom="20dp"
+        android:choiceMode="multipleChoice"
+        android:divider="@null"
+        android:dividerHeight="5dp"
+        android:transcriptMode="alwaysScroll"
+        app:layout_constraintBottom_toTopOf="@+id/prod_input_ed_1_layout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/grid_layout">
+    </ListView>
+
+    <LinearLayout
+        android:id="@+id/prod_input_ed_1_layout"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginStart="@dimen/lay_margin"
+        android:layout_marginEnd="@dimen/lay_margin"
+        app:layout_constraintBottom_toTopOf="@+id/prod_input_ed_2_layout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <EditText
+            android:id="@+id/prod_ed_name"
+            style="@style/myEditText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:hint="Название"
+            android:inputType="text"
+            android:maxLength="12"
+            android:nextFocusDown="@id/prod_ed_weight"
+            android:text=""
+            android:textSize="@dimen/text_size" />
+
+        <EditText
+            android:id="@+id/prod_ed_set_weight"
+            style="@style/myEditText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_weight="1"
+            android:inputType="number"
+            android:maxLength="5"
+            android:nextFocusDown="@id/prod_ed_weight"
+            android:text="100"
+            android:textSize="@dimen/text_size" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/button_set_weight"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginStart="10dp"
+            android:src="@android:drawable/ic_menu_rotate"
+            android:textColor="#ffffff"
+            android:textSize="@dimen/text_size"
+            app:elevation="1dp"
+            app:fabSize="mini" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/button_сlose_edit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginStart="10dp"
+            android:src="@android:drawable/ic_menu_close_clear_cancel"
+            android:textColor="#ffffff"
+            android:textSize="@dimen/text_size"
+            android:visibility="gone"
+            app:backgroundTint="@color/colorDanger"
+            app:elevation="1dp"
+            app:fabSize="mini" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/prod_input_ed_2_layout"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginBottom="@dimen/lay_margin"
+        android:paddingStart="@dimen/lay_margin"
+        android:paddingEnd="@dimen/lay_margin"
+        android:textSize="@dimen/text_size"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <EditText
+            android:id="@+id/prod_ed_weight"
+            style="@style/myEditText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:focusable="true"
+            android:hint="Вес"
+            android:inputType="numberDecimal"
+            android:maxLength="5"
+            android:nextFocusDown="@id/prod_ed_price"
+            android:textSize="@dimen/text_size" />
+
+        <EditText
+            android:id="@+id/prod_ed_price"
+            style="@style/myEditText"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_weight="1.5"
+            android:hint="Цена"
+            android:inputType="numberDecimal"
+            android:maxLength="6"
+
+            android:nextFocusDown="@id/mess_btnSend"
+            android:textSize="@dimen/text_size" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/mess_btnSend"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:clickable="true"
+            android:src="@android:drawable/ic_menu_send"
+            android:textSize="@dimen/text_size"
+            app:elevation="1dp"
+            app:fabSize="mini" />
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
