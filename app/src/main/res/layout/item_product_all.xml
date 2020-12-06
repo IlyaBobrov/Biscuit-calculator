@@ -79,10 +79,9 @@
         android:layout_columnWeight="1.2"
         android:layout_gravity="fill"
         android:ellipsize="end"
-        android:gravity="center"
+        android:gravity="center|end"
         android:maxLines="1"
         android:textSize="15sp"
-        android:textStyle="italic"
         tools:text="100" />
 
     <TextView
@@ -93,11 +92,9 @@
         android:layout_column="7"
         android:layout_columnWeight="0.3"
         android:layout_gravity="fill"
-        android:ellipsize="end"
         android:gravity="center"
         android:maxLines="1"
         android:textSize="15sp"
-        android:textStyle="italic"
         tools:text="ед." />
 
     <TextView

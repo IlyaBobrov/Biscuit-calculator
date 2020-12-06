@@ -5,10 +5,11 @@
     <item
         android:id="@+id/options_menu_sort"
         android:onClick="onClickOptionsMenu"
-        android:orderInCategory="10"
+        android:orderInCategory="1"
+        app:showAsAction="always"
+        android:icon="@android:drawable/ic_menu_sort_by_size"
         android:title="Сортировка"
-        android:visible="false"
-        app:showAsAction="never" />
+        />
     <item
         android:id="@+id/options_menu_settings"
         android:onClick="onClickOptionsMenu"

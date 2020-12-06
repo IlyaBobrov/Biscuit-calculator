@@ -9,6 +9,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -17,6 +18,9 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.SeekBar;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -31,6 +35,7 @@ import java.math.RoundingMode;
 import java.util.Arrays;
 
 import static android.database.DatabaseUtils.queryNumEntries;
+import static com.example.productcalc.DatabaseHelper.KEY_ID;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -55,7 +60,11 @@ public class MainActivity extends AppCompatActivity {
     SQLiteDatabase db;
     Cursor cursor, cursor_local;
     SimpleCursorAdapter productAdapter;
-    private boolean VIEW_ALL_ELEMENT;
+    //TODO:Создать глобальные параметры для сортировки
+    RadioButton rbAscending, rbDescending, rbName, rbWeight, rbPrice, rbUnit;
+    RadioGroup rgSortBy, rgSortUpDown;
+    private boolean VIEW_CUSTOM_COLUMN;
+    private boolean SORT_BY_ASCENDING;
     private FloatingActionButton btnSend, btnReCalc, btnCloseEdit;
     private EditText eName, ePrice, eWeight, eAnother;
     private long productId = NOT_ID;
@@ -87,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
         outState.putString(ET_ANOTHER_SIS, eAnother.getText().toString());
         outState.putString(ET_WEIGHT_SIS, eWeight.getText().toString());
         outState.putString(ET_PRICE_SIS, ePrice.getText().toString());
-        outState.putBoolean(OPTIONS_SIS, VIEW_ALL_ELEMENT);
+        outState.putBoolean(OPTIONS_SIS, VIEW_CUSTOM_COLUMN);
         outState.putLong(PRODUCT_ID_SIS, productId);
         outState.putStringArray(BUFFER_ET_SIS, bufferEditText);
         super.onSaveInstanceState(outState);
@@ -106,7 +115,7 @@ public class MainActivity extends AppCompatActivity {
         eAnother.setText(savedInstanceState.getString(ET_ANOTHER_SIS));
         eWeight.setText(savedInstanceState.getString(ET_WEIGHT_SIS));
         ePrice.setText(savedInstanceState.getString(ET_PRICE_SIS));
-        VIEW_ALL_ELEMENT = savedInstanceState.getBoolean(OPTIONS_SIS);
+        VIEW_CUSTOM_COLUMN = savedInstanceState.getBoolean(OPTIONS_SIS);
     }
 
     @SuppressLint("NonConstantResourceId")
@@ -124,22 +133,38 @@ public class MainActivity extends AppCompatActivity {
         return super.onContextItemSelected(item);
     }
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        settings = getSharedPreferences("SETTINGS", MODE_PRIVATE);
-        VIEW_ALL_ELEMENT = settings.getBoolean(SETTINGS_SP, false);
+    private void findAllViewById() {
         eName = findViewById(R.id.prod_ed_name);
         eAnother = findViewById(R.id.prod_ed_set_weight);
         eWeight = findViewById(R.id.prod_ed_weight);
         ePrice = findViewById(R.id.prod_ed_price);
         customInfoGrid = findViewById(R.id.grid_custom);
+
         btnSend = findViewById(R.id.mess_btnSend);
         btnReCalc = findViewById(R.id.button_set_weight);
         btnCloseEdit = findViewById(R.id.button_сlose_edit);
+
         header = findViewById(R.id.header);
         listView = findViewById(R.id.grid_view);
+
+        rgSortBy = (RadioGroup) findViewById(R.id.rgSortBy);
+        rgSortUpDown = (RadioGroup) findViewById(R.id.rgUpDown);
+
+        rbAscending = findViewById(R.id.rbSortAscending);
+        rbDescending = findViewById(R.id.rbSortDescending);
+        rbName = findViewById(R.id.rbSortByName);
+        rbWeight = findViewById(R.id.rbSortByWeight);
+        rbPrice = findViewById(R.id.rbSortByPrice);
+        rbUnit = findViewById(R.id.rbSortByUnit);
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        settings = getSharedPreferences("SETTINGS", MODE_PRIVATE);
+        VIEW_CUSTOM_COLUMN = settings.getBoolean(SETTINGS_SP, false);
+        findAllViewById();
         eWeight.requestFocus();
         //TODO:внедрить вес
         measure = "г";
@@ -191,7 +216,7 @@ public class MainActivity extends AppCompatActivity {
                 ePrice.setText("");
                 eWeight.setText("");
             } else {
-                db.update(DatabaseHelper.TABLE_PRODUCTS, contentValues, DatabaseHelper.KEY_ID + "=" + productId, null);
+                db.update(DatabaseHelper.TABLE_PRODUCTS, contentValues, KEY_ID + "=" + productId, null);
                 finishEditData();
             }
             productShowInfo();
@@ -220,13 +245,14 @@ public class MainActivity extends AppCompatActivity {
     @SuppressLint("SetTextI18n")
     private void productShowInfo() {
         db = dbHelper.getWritableDatabase();
-        cursor = db.rawQuery("SELECT * from " + DatabaseHelper.TABLE_PRODUCTS, null);
-        if (VIEW_ALL_ELEMENT) {
-            //показываем все элементы
-            customInfoGrid.setVisibility(View.VISIBLE);
+
+        //TODO:Добавить switch конструкцию для сортировки
+        cursor = db.query(DatabaseHelper.TABLE_PRODUCTS, null, null, null, null, null, null);
+
+        if (VIEW_CUSTOM_COLUMN) {
+            customInfoGrid.setVisibility(View.VISIBLE); //показываем все элементы
             eAnother.setVisibility(View.VISIBLE);
-            //Проверка на режим редактирования
-            if (productId == NOT_ID) {
+            if (productId == NOT_ID) { //Проверка на режим редактирования
                 btnReCalc.setVisibility(View.VISIBLE);
                 btnCloseEdit.setVisibility(View.GONE);
             } else {
@@ -262,7 +288,7 @@ public class MainActivity extends AppCompatActivity {
     private boolean checkInputData() {
         if (ePrice.getText().toString().isEmpty() ||
                 eWeight.getText().toString().isEmpty() ||
-                (eAnother.getText().toString().isEmpty() && VIEW_ALL_ELEMENT)) {
+                (eAnother.getText().toString().isEmpty() && VIEW_CUSTOM_COLUMN)) {
             if (productId != NOT_ID) {
                 onContextItemDeleteData(productId);
                 return false;
@@ -279,7 +305,7 @@ public class MainActivity extends AppCompatActivity {
             return false;
         }
         //проверка на скрытое пустое поле
-        if (eAnother.getText().toString().isEmpty() && !VIEW_ALL_ELEMENT) {
+        if (eAnother.getText().toString().isEmpty() && !VIEW_CUSTOM_COLUMN) {
             eAnother.setText(String.valueOf(DEFAULT_UNITS));
         }
         if (eName.getText().toString().isEmpty()) {
@@ -299,7 +325,7 @@ public class MainActivity extends AppCompatActivity {
         }
         productId = id;
         cursor = db.rawQuery("select * from " + DatabaseHelper.TABLE_PRODUCTS + " where " +
-                DatabaseHelper.KEY_ID + "=?", new String[]{String.valueOf(id)});
+                KEY_ID + "=?", new String[]{String.valueOf(id)});
         cursor.moveToFirst();
         //заполняем данные из бд
         eName.setText(cursor.getString(1));
@@ -319,12 +345,12 @@ public class MainActivity extends AppCompatActivity {
         //Цикл по всем элементам в бд
         //TODO: оптимизировать цикл
         for (int rowId = 0; rowId < cursor.getCount(); rowId++) {
-            Log.d(TAG, "get id: " + cursor.getInt(cursor.getColumnIndex(DatabaseHelper.KEY_ID)));
+            Log.d(TAG, "get id: " + cursor.getInt(cursor.getColumnIndex(KEY_ID)));
             updatedValues.put(DatabaseHelper.KEY_RES_UNITS, recalcUnits(
-                    cursor.getInt(cursor.getColumnIndex(DatabaseHelper.KEY_ID))));
+                    cursor.getInt(cursor.getColumnIndex(KEY_ID))));
             updatedValues.put(DatabaseHelper.KEY_UNITS, Integer.parseInt(eAnother.getText().toString()));
             db.update(DatabaseHelper.TABLE_PRODUCTS, updatedValues,
-                    DatabaseHelper.KEY_ID + "=" + cursor.getInt(cursor.getColumnIndex(DatabaseHelper.KEY_ID)), null);
+                    KEY_ID + "=" + cursor.getInt(cursor.getColumnIndex(KEY_ID)), null);
             cursor.moveToNext();
         }
         cursor.close();
@@ -334,7 +360,7 @@ public class MainActivity extends AppCompatActivity {
         //диалоговое окно об удалении item
         db = dbHelper.getWritableDatabase();
         cursor = db.rawQuery("select * from " + DatabaseHelper.TABLE_PRODUCTS + " where " +
-                DatabaseHelper.KEY_ID + "=?", new String[]{String.valueOf(id)});
+                KEY_ID + "=?", new String[]{String.valueOf(id)});
         cursor.moveToFirst();
         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
         builder.setTitle("Внимание").setMessage("Удалить элемент: " + cursor.getString(1)).setPositiveButton("да", (dialog, which) -> {
@@ -377,7 +403,7 @@ public class MainActivity extends AppCompatActivity {
     private double recalcUnits(long rowId) {
         //Ставим курсор на переданную строку
         cursor_local = db.rawQuery("select * from " + DatabaseHelper.TABLE_PRODUCTS + " where " +
-                DatabaseHelper.KEY_ID + "=?", new String[]{String.valueOf(rowId)});
+                KEY_ID + "=?", new String[]{String.valueOf(rowId)});
         cursor_local.moveToFirst();
         double res = round(Double.parseDouble(String.valueOf(cursor_local.getDouble(3))) *
                 Integer.parseInt(eAnother.getText().toString()) /
@@ -393,23 +419,75 @@ public class MainActivity extends AppCompatActivity {
         cursor.close();
     }
 
-    @SuppressLint({"NonConstantResourceId", "CommitPrefEdits"})
+    @SuppressLint({"NonConstantResourceId", "CommitPrefEdits", "InflateParams"})
     public void onClickOptionsMenu(MenuItem item) {
         switch (item.getItemId()) {
-            //TODO:реализовать сортировку
-            /*case R.id.options_menu_sort:
-                break;*/
+            //TODO:Сделать корректное получение выбранного item
+            case R.id.options_menu_sort:
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                LayoutInflater inflater = getLayoutInflater();
+                builder.setView(inflater.inflate(R.layout.dialog_sort, null))
+                        .setPositiveButton(R.string.apply, (dialog, id) -> {
+                           /* rgSortUpDown.setOnCheckedChangeListener((group, checkedId) -> {
+                                switch (checkedId) {
+                                    case -1:
+                                        Toast.makeText(getApplicationContext(), "Ничего не выбрано",
+                                                Toast.LENGTH_SHORT).show();
+                                        break;
+                                    case R.id.rbSortAscending:
+                                        Toast.makeText(getApplicationContext(), "По убыванию",
+                                                Toast.LENGTH_SHORT).show();
+                                        break;
+                                    case R.id.rbSortDescending:
+                                        Toast.makeText(getApplicationContext(), "По возрастанию",
+                                                Toast.LENGTH_SHORT).show();
+                                        break;
+                                    default:
+                                        break;
+                                }
+                            });
+                            rgSortBy.setOnCheckedChangeListener((group, checkedId) -> {
+                                switch (checkedId) {
+                                    case -1:
+                                        Toast.makeText(getApplicationContext(), "Ничего не выбрано",
+                                                Toast.LENGTH_SHORT).show();
+                                        break;
+                                    case R.id.rbSortByName:
+                                        Toast.makeText(getApplicationContext(), "По названию",
+                                                Toast.LENGTH_SHORT).show();
+                                        break;
+                                    case R.id.rbSortByPrice:
+                                        Toast.makeText(getApplicationContext(), "По цене",
+                                                Toast.LENGTH_SHORT).show();
+                                        break;
+                                    default:
+                                        break;
+                                }
+                            });*/
+                            Toast.makeText(MainActivity.this, "Функция в разработке...", Toast.LENGTH_LONG).show();
+                            if (rgSortUpDown == null)
+                                Log.d(TAG, "onClickOptionsMenu: rgSortUpDown null");
+                            if (rbAscending == null)
+                                Log.d(TAG, "onClickOptionsMenu: rbAscending null");
+                            if (rbDescending == null)
+                                Log.d(TAG, "onClickOptionsMenu: rbDescending null");
+                            //productShowInfo();
+                        })
+                        .setNegativeButton(R.string.cancel, (dialog, id) -> {
+                        }).show();
+                break;
+
             case R.id.options_menu_settings:
-                VIEW_ALL_ELEMENT = !VIEW_ALL_ELEMENT;
+                VIEW_CUSTOM_COLUMN = !VIEW_CUSTOM_COLUMN;
                 //Сохранение настроек
                 prefEditor = settings.edit();
-                prefEditor.putBoolean(SETTINGS_SP, VIEW_ALL_ELEMENT);
+                prefEditor.putBoolean(SETTINGS_SP, VIEW_CUSTOM_COLUMN);
                 prefEditor.apply();
                 productShowInfo();
                 break;
             case R.id.options_menu_clear:
-                AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                builder.setTitle("Внимание").setMessage("Вы хотите безвозвратно удалить все элементы?")
+                AlertDialog.Builder builder2 = new AlertDialog.Builder(this);
+                builder2.setTitle("Внимание").setMessage("Вы хотите безвозвратно удалить все элементы?")
                         .setPositiveButton("да", (dialog, which) -> {
                             //удаляем данные из бд
                             deleteAllData();
